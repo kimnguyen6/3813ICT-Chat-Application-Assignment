@@ -13,6 +13,12 @@ import { CreateChannelComponent } from './create-channel/create-channel.componen
 import { ChatComponent } from './chat/chat.component';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { DataSharingService } from './services/data-sharing.service';
+import { SocketService } from './services/socket.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,9 +34,12 @@ import { ChatRoomComponent } from './chat-room/chat-room.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    CommonModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [DataSharingService, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
