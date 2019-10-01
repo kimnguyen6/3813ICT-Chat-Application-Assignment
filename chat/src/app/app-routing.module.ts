@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersComponent } from './users/users.component';
+import { CreateGroupComponent } from './create-group/create-group.component';
 import { GroupsComponent } from './groups/groups.component';
 import { ChannelsComponent } from './channels/channels.component';
 import { ChatComponent } from './chat/chat.component';
@@ -16,10 +17,11 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: "users", component: UsersComponent},
   {path: "groups", component: GroupsComponent},
-  {path: "channels/:group", component: ChannelsComponent},
-  {path: "chat", component: ChatComponent},
-  {path: "chat-room/:group/:channel", component: ChatRoomComponent},
-  {path: "CreateChannel", component: CreateChannelComponent},
+  {path: "groups/create", component: CreateGroupComponent},
+  //{path: "channels/:group", component: ChannelsComponent},
+  //{path: "chat", component: ChatComponent},
+  //{path: "chat-room/:group/:channel", component: ChatRoomComponent},
+  //{path: "CreateChannel", component: CreateChannelComponent},
   {path: "register", component: RegisterComponent}
 ];
 

@@ -18,19 +18,21 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { DataSharingService } from './services/data-sharing.service';
 import { SocketService } from './services/socket.service';
+import { CreateGroupComponent } from './create-group/create-group.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ProfileComponent,
-    ChannelsComponent,
+    //ChannelsComponent,
     GroupsComponent,
     UsersComponent,
     RegisterComponent,
-    CreateChannelComponent,
-    ChatComponent,
-    ChatRoomComponent
+    //CreateChannelComponent,
+    //ChatComponent,
+    //ChatRoomComponent,
+    CreateGroupComponent
   ],
   imports: [
     BrowserModule,

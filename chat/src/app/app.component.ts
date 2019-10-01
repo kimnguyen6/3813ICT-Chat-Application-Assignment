@@ -52,6 +52,17 @@ export class AppComponent {
     }
   }
 
+  groupsLink() {
+    if (
+      JSON.parse(sessionStorage.getItem("user")) != undefined ||
+      JSON.parse(sessionStorage.getItem("user")) !== null
+    ) {
+      this.router.navigateByUrl("/groups");
+    } else {
+      this.router.navigateByUrl("/login");
+    }
+  }
+
   logOut() {
     if (typeof Storage !== "undefined") {
       sessionStorage.clear();

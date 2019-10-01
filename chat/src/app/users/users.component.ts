@@ -11,8 +11,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class UsersComponent implements OnInit {
 
   users = [];
-  super = false;
-  group = false;
+  updatedUsers = [];
+  email = "";
   profile;
 
   constructor(private router: Router, private datasharingservice: DataSharingService) { }
@@ -20,10 +20,11 @@ export class UsersComponent implements OnInit {
   ngOnInit() {
     this.profile = JSON.parse(sessionStorage.getItem("user"));
 
-    if (this.profile.type == "super") {
-      this.super = true;
-    } else {
-      alert("Super Admin Only");
+    if (this.profile.type == "normal") {
+      alert("Only for Super & Group Admin");
+      this.router.navigateByUrl('/profile');
+    } else if (this.profile.type == "group assis"){
+      alert("Only for Super & Group Admin");
       this.router.navigateByUrl('/profile');
     }
     
@@ -33,6 +34,13 @@ export class UsersComponent implements OnInit {
       (error: HttpErrorResponse) => {
         alert('Error');
       }
+  }
+  ngAfterViewInit(){}
+
+  deleteUser(email:string){
+    this.datasharingservice.deleteUser(email).subscribe(data => {
+      this.users = data;
+    });
   }
 
 }

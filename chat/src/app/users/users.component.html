@@ -11,17 +11,17 @@
           }
       </style>
   </head>
-<div class="container" *ngIf="super; else loading">
+<div class="container">
     <ul *ngFor="let user of users">
       <li>
         Email: {{ user.email }}<br />
         Username: {{ user.username }}<br />
-        <button type="submit">Delete</button>
+        <button type="submit" (click)="deleteUser(user.email)">Delete</button>
       </li>
     </ul>
   </div>
   
-  <ng-template #loading>
+  <!-- <ng-template #loading>
     <div>Super Admin Only</div>
-  </ng-template>
+  </ng-template> -->
 </html>
