@@ -1,1 +1,26 @@
-<p>profile works!</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <style type="text.css">
+          .container {
+            padding-top: 15px;
+            width: 600px;
+            background: #f7f7f7;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+          }
+          .container h1 {
+            text-align: center;
+          }
+      </style>
+  </head>
+  <br>
+  <div class="container">
+    <h1><b>Profile Page</b></h1>
+    <h1>Email: {{ data.email }}</h1>
+    <h1>Username: {{ data.username }}</h1>
+    <h1>Birthday: {{ data.birthday }}</h1>
+    <h1>Age: {{ data.age }}</h1>
+  </div>
+</html>
+  

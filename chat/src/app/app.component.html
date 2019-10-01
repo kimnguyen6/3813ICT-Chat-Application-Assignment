@@ -9,10 +9,10 @@
         <a class="nav-link" routerLink="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/profile">Profile</a>
+        <a class="nav-link" (click)="profileLink()">Profile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/users">Users</a>
+        <a class="nav-link" (click)="usersLink()">Users</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/groups">Groups</a>
@@ -22,9 +22,9 @@
       </li>
     </ul>
     <span class="navbar-text">
-      <button type="button" class="btn btn-info" routerLink="/register">Register</button>
-      <button type="button" class="btn btn-outline-primary" outerLink="/">Login </button> 
-      <button type="button" class="btn btn-outline-danger" routerLink="/">Sign Out</button>
+      <button type="button" class="btn btn-info" (click)="registerLink()">Register</button>
+      <button type="button" class="btn btn-outline-primary" (click)="loginLink()">Login </button> 
+      <button type="button" class="btn btn-outline-danger" (click)="logOut()">Sign Out</button>
     </span>
   </div>
 </nav>
