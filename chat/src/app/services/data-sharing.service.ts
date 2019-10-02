@@ -135,4 +135,11 @@ export class DataSharingService {
       group: group
     });
   }
+
+  // Gives Super Admin to user
+  giveSuper(user) {
+    return this.http.post<any>(this.backend + "/giveSuper", {
+      user: user
+    });
+  }
 }

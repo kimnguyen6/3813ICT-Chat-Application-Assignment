@@ -223,6 +223,35 @@ module.exports = function(app, path){
         });
     });
 
+    //Allows super admin to be given
+   app.post("/giveSuper", (req, res) => {
+    let data = fs.readFileSync("data.json", "utf8", function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        return data;
+      }
+    });
+
+    data = JSON.parse(data);
+
+    if (!req.body) {
+      return res.sendStatus(400);
+    }
+    let userIndex = data.users
+      .map(user => {
+        return user.username;
+      })
+      .indexOf(req.body.user.username);
+
+    data.users[userIndex].type = "super";
+    res.send(data.users);
+    data = JSON.stringify(data);
+    fs.writeFile("data.json", data, function(err, result) {
+      if (err) console.log("error", err);
+    });
+  });
+
     // Delete members in the channel
     app.post('/channel/deleteMember', (req, res) =>{
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
@@ -344,43 +373,6 @@ module.exports = function(app, path){
        if (err) console.log("error", err);
      });
    });
-
-  //  app.post("/group/deleteMember", (req, res) => {
-  //   let data = fs.readFileSync("data.json", "utf8", function(err, data) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       return data;
-  //     }
-  //   });
-
-  //   data = JSON.parse(data);
-
-  //   if (!req.body) {
-  //     return res.sendStatus(400);
-  //   }
-  //   console.log(req.body.group, req.body.member);
-
-  //   var group_index = data.groups
-  //     .map(group => {
-  //       return group.group;
-  //     })
-  //     .indexOf(req.body.group);
-
-  //   var member_index = data.groups[group_index].members.indexOf(
-  //     req.body.member
-  //   );
-
-  //   console.log(member_index);
-
-  //   data.groups[group_index].members.splice(member_index, 1);
-
-  //   res.send(data.groups);
-  //    data = JSON.stringify(data);
-  //   fs.writeFile("data.json", data, function(err, result) {
-  //     if (err) console.log("error", err);
-  //   });
-  // });
 
     // Deletes Users
     app.post('/api/delete', function(req, res) {
