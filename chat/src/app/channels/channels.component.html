@@ -18,25 +18,42 @@
       </style>
   </head>
   <div class="container">
-      <div class="notification">
-        <form>
-          <div class="field has-addons has-addons-centered">
-              <div class="control">
-                  <h1>Channels</h1>
-                  <a href ="groups/channels/createChannel">Create Channel</a>
-                  <div *ngFor="let userChannel of userChannels">
-                      <h1>
-                          {{ userChannel.channel }}
-                      </h1>
-                      <p *ngFor="let member of toArray(userChannel.members)">
-                          Channel Members: {{ member }}
-                      </p>
-                      <button type="button" (click)="viewChat()">Chat</button>
-                  </div>
-              </div>
-          </div>
-        </form>
+    <form>
+        <h1>Channels</h1>
+        <a href="groups/channels/createChannel">Create Channel</a>
+        <div *ngFor="let userChannel of userChannels">
+        <div *ngIf="userChannel.members.indexOf(profile.username) >= 0 ||
+          profile.type == 'super' ||
+          profile.type == 'group'">
+        </div>
+        <h2>
+            {{ userChannel.channel }}
+        </h2>
+        <div *ngFor="let member of toArray(userChannel.members)">
+          <p>
+            Channel Members: {{ member }}
+            <button type="submit" (click)="deleteChannelMember(member, userChannel.channel)">
+              Delete
+            </button>
+          </p>
+        </div>
+        <button (click)="deleteChannel(userChannel.channel)">Delete Channel</button>
+        <button type="button" (click)="viewChat(member)">Chat</button>
+        <div *ngIf="valid">
+          <select [(ngModel)]="selectChannel" name="selectChannel">
+            <option *ngFor="let channel of userChannels" value="{{ channel.channel }}">
+              {{ channel.channel }}
+            </option>
+          </select>
+          <select [(ngModel)]="selectUser" name="selectUser">
+            <option *ngFor="let user of users" value="{{ user.username }}">
+              {{ user.username }}
+            </option>
+            </select>
+            <button (click)="addMember()">Invite</button>
+        </div>
       </div>
+    </form>
     </div>
 </html>
   

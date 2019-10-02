@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { DataSharingService } from '../services/data-sharing.service';
-import { Route, Router, Data } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { DataSharingService } from "../services/data-sharing.service";
+import { Route, Router, Data } from "@angular/router";
 
 @Component({
   selector: "app-channels",
@@ -9,62 +9,61 @@ import { Route, Router, Data } from '@angular/router';
 })
 export class ChannelsComponent implements OnInit {
   @Output() click = new EventEmitter();
-
-  constructor(private router: Router, private datasharingservice: DataSharingService) { }
+  constructor(private router: Router, private dataservice: DataSharingService) {}
 
   profile;
-  userGroups;
-  groups;
   userChannels;
+  selectUser;
+  selectChannel;
+  groupName;
 
   ngOnInit() {
-    if (typeof Storage !== "undefined"){
-      this.click.emit();
-      let groupName = sessionStorage.getItem("currenGroup");
-  
-      this.datasharingservice.getUsers().subscribe(data => {
-        data.forEach(data => {
-          this.profile = JSON.parse(sessionStorage.getItem("user"));
-          if (this.profile.username == data.username) {
-            this.profile = data;
-            this.userGroups = this.profile.groups;
-            this.datasharingservice.getGroups().subscribe(data => {
-              let groups = [];
+    this.click.emit();
+    let groupName = sessionStorage.getItem("currentGroup");
+    this.profile = JSON.parse(sessionStorage.getItem("user"));
 
-              data.forEach((dat, index) => {
-                this.userGroups.forEach(userGroup => {
-                  if (userGroup == dat.group) {
-                    groups.push(data[index]);
-                  }
-                });
-              });
+    this.groupName = groupName;
 
-              if (this.profile.type == "super" ) {
-                this.groups = data;
-              } else {
-                this.groups = groups;
-              } 
-
-              this.groups.forEach(group => {
-                if (groupName == group.group) {
-                  if (group.channels !== undefined ) {
-                    this.userChannels = group.channels;
-                    console.log(typeof this.userChannels[0].members);
-                  }
-                }
-              });
-            });
-          }
-        });
-      });
-    }
+    this.dataservice.getChannels(this.groupName).subscribe(data => {
+      this.userChannels = data.channels;
+      console.log(this.userChannels);
+    });
   }
-  
-  toArray(members: object){
+  toArray(members: object) {
     return Object.keys(members).map(key => members[key]);
   }
-  viewChat(){
+  viewChat() {
     this.router.navigateByUrl("groups/channels/chat");
   }
 
+  addMember() {
+    if (this.selectChannel == undefined) {
+      alert("Choose the channel");
+    } else if (this.selectUser == undefined) {
+      alert("choose the member");
+    } else {
+      this.dataservice
+        .channelInvite(this.groupName, this.selectChannel, this.selectUser)
+        .subscribe(data => {
+          if (!data) {
+            alert("user already exstis");
+          } else {
+            this.userChannels = data;
+          }
+        });
+    }
+  }
+  deleteChannel(channel) {
+    this.dataservice.deleteChannel(this.groupName, channel).subscribe(data => {
+      this.userChannels = data;
+    });
+  }
+
+  deleteChannelMember(member, channel) {
+    this.dataservice
+      .deleteChannelMember(this.groupName, channel, member)
+      .subscribe(data => {
+        this.userChannels = data;
+      });
+  }
 }

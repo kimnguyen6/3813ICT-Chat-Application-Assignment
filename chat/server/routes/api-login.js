@@ -1,64 +1,27 @@
 module.exports = function(app, path){
     var fs = require('fs');
-    // groups = [{
-    //     group: "group1",
-    //     assis: "user2",
-    //     members: ["user1, user3, user4"]
-    // },
-    // {
-    //     group: "group2",
-    //     assis: "user3",
-    //     members: ["user1, user2"] 
-    // },
-    // {
-    //     group: "group3",
-    //     assis: "user3",
-    //     members: ["user1, user4"] 
-    // }
-    // ];
 
-    // users = [
-    //     {
-    //         username: "user1",
-    //         birthday: "19/09/1993",
-    //         age: "26",
-    //         email: "user1@com.au",
-    //         password: "123",
-    //         valid: "",
-    //         type: "super",
-    //         groups: ["group1,", "group2", "group3"]
-    //     },
-    //     {
-    //         username: "user2",
-    //         birthday: "12/03/1999",
-    //         age: "20",
-    //         email: "user2@com.au",
-    //         password: "321",
-    //         valid: "",
-    //         type: "group assis",
-    //         groups: ["group1,", "group2"]
-    //     },
-    //     {
-    //         username: "user3",
-    //         birthday: "18/09/1998",
-    //         age: "21",
-    //         email: "user3@com.au",
-    //         password: "333",
-    //         valid: "",
-    //         type: "normal",
-    //         groups: ["group1,", "group2", "group3"]
-    //     },
-    //     {
-    //         username: "user4",
-    //         birthday: "25/06/1996",
-    //         age: "23",
-    //         email: "user4@com.au",
-    //         password: "444",
-    //         valid: "",
-    //         type: "group",
-    //         groups: ["group1,", "group3"]
-    //     }
-    // ];
+    app.post("/getChannels", (req, res) => {
+        let data = fs.readFileSync("data.json", "utf8", function(err, data){
+            if(err) {
+                console.log(err);
+            } else {
+                return data;
+            }
+        });
+
+        data = JSON.parse(data);
+
+        if (!req.body){
+            return res.sendStatus(400);
+        }
+
+        let groupIndex = data.groups.map(group => {
+            return group.group;
+        })
+        .indexOf(req.body.group);
+        res.send(data.groups[groupIndex]);
+    });
 
     app.get("/groups", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
@@ -67,6 +30,7 @@ module.exports = function(app, path){
             }
         });
         data = JSON.parse(data);
+
         res.send(data.groups);
     });
 
@@ -172,7 +136,7 @@ module.exports = function(app, path){
         }
     });
 
-    app.post('/group/deleteMember', (req, res) => {
+    app.post('/createChannel', (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function (err, data){
             if (err) {
                 console.log(err);
@@ -183,23 +147,231 @@ module.exports = function(app, path){
 
         data = JSON.parse(data);
 
-        if(!req.body){
-            return res.sendStatus(400);
+        let groupIndex = data.groups.map(group => {
+            return group.group;
+        })
+        .indexOf(req.body.group);
+        console.log(req.body.channel);
+        console.log(req.body.group);
+
+        let newChannel = {};
+
+        newChannel.channel = req.body.channel;
+        newChannel.members = [];
+        if (data.groups[groupIndex].channels == undefined) {
+            data.groups[groupIndex].channels = [];
         }
 
-        data.groups.forEach(group =>{
-            group.members.forEach((member, index) => {
-                if (member == req.body.member){
-                    group.members.splice(index, 1);
-                }
-            });
-        });
-        res.send(data.groups);
+        let channelName = data.groups[groupIndex].channels.map(channel => {
+            return channel.channel;
+        })
+        .indexOf(req.body.channel);
+
+        if (channelName == -1) {
+            data.groups[groupIndex].channels.push(newChannel);
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+
         data = JSON.stringify(data);
         fs.writeFile("data.json", data, function(err, result) {
             if (err) console.log("error", err);
         });
     });
+
+    app.post("/deleteChannel", (req, res) => {
+        let data = fs.readFileSync("data.json", "utf8", function(err, data){
+            if (err) {
+                console.log(err);
+            } else {
+                return data;
+            }
+        });
+        data = JSON.parse(data);
+
+        if(!req.body){
+            return res.sendStatus(400);
+        }
+
+        console.log(req.body.channel, req.body.group);
+
+        let groupIndex = data.groups.map(group => {
+            return group.group;
+        })
+        .indexOf(req.body.group);
+        console.log(data.groups[groupIndex].channels);
+        let channelIndex = data.groups[groupIndex].channels.map(channel => {
+            return channel.channel;
+        })
+        .indexOf(req.body.channel);
+
+        data.groups[groupIndex].channels.splice(channelIndex, 1);
+
+        res.send(data.groups[groupIndex].channels);
+
+        data = JSON.stringify(data);
+        fs.writeFile("data.json", data, function(err, result){
+            if (err) console.log("error", err);
+        });
+    });
+    
+    app.post('/channel/deleteMember', (req, res) =>{
+        let data = fs.readFileSync("data.json", "utf8", function(err, data){
+            if (err) {
+                console.log(err);
+            } else {
+                return data;
+            }
+        });
+
+        data = JSON.parse(data);
+
+        if (!req.body) {
+            return res.sendStatus(400);
+          }
+          let groupIndex = data.groups
+            .map(group => {
+              return group.group;
+            })
+            .indexOf(req.body.group);
+     
+          let channelIndex = data.groups[groupIndex].channels
+            .map(channel => {
+              return channel.channel;
+            })
+            .indexOf(req.body.channel);
+     
+          let memberIndex = data.groups[groupIndex].channels[channelIndex].members
+            .map(member => {
+              return member;
+            })
+            .indexOf(req.body.member);
+     
+          data.groups[groupIndex].channels[channelIndex].members.splice(
+            memberIndex,
+            1
+          );
+          res.send(data.groups[groupIndex].channels);
+
+          data = JSON.stringify(data);
+          fs.writeFile("data.json", data, function(err, result){
+              if (err) console.log("error", err);
+          });
+    });
+
+    app.post("/channel/invite", (req, res) => {
+     let data = fs.readFileSync("data.json", "utf8", function(err, data) {
+       if (err) {
+         console.log(err);
+       } else {
+         return data;
+       }
+     });
+     data = JSON.parse(data);
+
+     if (!req.body) {
+       return res.sendStatus(400);
+     }
+
+     console.log(req.body.channel, req.body.member, req.body.group);
+
+     let groupIndex = data.groups
+       .map(group => {
+         return group.group;
+       })
+       .indexOf(req.body.group);
+
+     let channelIndex = data.groups[groupIndex].channels
+       .map(channel => {
+         return channel.channel;
+       })
+       .indexOf(req.body.channel);
+
+     let check = data.groups[groupIndex].channels[channelIndex].members.includes(
+       req.body.member
+     );
+     if (!check) {
+       data.groups[groupIndex].channels[channelIndex].members.push(
+         req.body.member
+       );
+       res.send(data.groups[groupIndex].channels);
+     } else {
+       res.send(false);
+     }
+
+     let userIndex = data.users
+       .map(user => {
+         console.log(user);
+         return user.username;
+       })
+       .indexOf(req.body.member);
+
+     if (data.users[userIndex].channels == undefined) {
+       data.users[userIndex].channels = [];
+     }
+     let userChannelIndex = data.users[userIndex].channels
+       .map(channel => {
+         return channel.group;
+       })
+       .indexOf(req.body.group);
+
+     if (userChannelIndex == -1) {
+       let newChannel = {};
+       newChannel.group = req.body.group;
+       newChannel.groupChannels = [];
+       newChannel.groupChannels.push(req.body.channel);
+       data.users[userIndex].channels.push(newChannel);
+     } else {
+       let newChannel = {};
+       newChannel.group = req.body.group;
+       newChannel.groupChannels = [];
+       newChannel.groupChannels.push(req.body.channel);
+       data.users[userIndex].channels.push(newChannel);
+     }
+
+     data = JSON.stringify(data);
+     fs.writeFile("data.json", data, function(err, result) {
+       if (err) console.log("error", err);
+     });
+   });
+
+   app.post("/group/deleteMember", (req, res) => {
+    let data = fs.readFileSync("data.json", "utf8", function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        return data;
+      }
+    });
+
+    data = JSON.parse(data);
+
+    if (!req.body) {
+      return res.sendStatus(400);
+    }
+    console.log(req.body.group, req.body.member);
+
+    var group_index = data.groups
+      .map(group => {
+        return group.group;
+      })
+      .indexOf(req.body.group);
+
+    var member_index = data.groups[group_index].members.indexOf(
+      req.body.member
+    );
+
+    console.log(member_index);
+
+    data.groups[group_index].members.splice(member_index, 1);
+
+    res.send(data.groups);
+     data = JSON.stringify(data);
+    fs.writeFile("data.json", data, function(err, result) {
+      if (err) console.log("error", err);
+    });
+  });
 
     app.post('/api/delete', function(req, res) {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
@@ -264,6 +436,39 @@ module.exports = function(app, path){
         });
     });
     
+    app.post("/groups/group/invite", (req, res) => {
+     let data = fs.readFileSync("data.json", "utf8", function(err, data) {
+       if (err) {
+         console.log(err);
+       } else {
+         return data;
+       }
+     });
+     data = JSON.parse(data);
+
+     if (!req.body) {
+       return res.sendStatus(400);
+     }
+     var group_index = data.groups
+       .map(group => {
+         return group.group;
+       })
+       .indexOf(req.body.group);
+
+     if (data.groups[group_index].members.includes(req.body.member)) {
+       res.send(false);
+     } else {
+       data.groups[group_index].members.push(req.body.member);
+       console.log(data.groups[group_index].members);
+       res.send(data.groups);
+     }
+     data = JSON.stringify(data);
+
+     fs.writeFile("data.json", data, function(err, result) {
+       if (err) console.log("error", err);
+     });
+   });
+
     app.post('/api/auth', function(req, res) {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
