@@ -1,4 +1,4 @@
-module.exports = function(app, path){
+module.exports = function(db, app, path, ObjectID){
     var fs = require('fs');
 
     // Gets Specific Group Information
