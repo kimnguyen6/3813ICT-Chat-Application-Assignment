@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: "users", component: UsersComponent},
   {path: "groups", component: GroupsComponent},
   {path: "groups/create", component: CreateGroupComponent},
-  //{path: "channels/:group", component: ChannelsComponent},
+  {path: "channels/:group", component: ChannelsComponent},
   //{path: "chat", component: ChatComponent},
   //{path: "chat-room/:group/:channel", component: ChatRoomComponent},
   //{path: "CreateChannel", component: CreateChannelComponent},

@@ -3,12 +3,17 @@ module.exports = function(app, path){
     groups = [{
         group: "group1",
         assis: "user2",
-        members: ["user1, user2, user3"]
+        members: ["user1, user3, user4"]
     },
     {
         group: "group2",
         assis: "user3",
-        members: ["user1, user3"] 
+        members: ["user1, user2"] 
+    },
+    {
+        group: "group3",
+        assis: "user3",
+        members: ["user1, user4"] 
     }
     ];
 
@@ -20,7 +25,8 @@ module.exports = function(app, path){
             email: "user1@com.au",
             password: "123",
             valid: "",
-            type: "super"
+            type: "super",
+            groups: ["group1,", "group2", "group3"]
         },
         {
             username: "user2",
@@ -29,7 +35,8 @@ module.exports = function(app, path){
             email: "user2@com.au",
             password: "321",
             valid: "",
-            type: "group assis"
+            type: "group assis",
+            groups: ["group1,", "group2"]
         },
         {
             username: "user3",
@@ -38,7 +45,8 @@ module.exports = function(app, path){
             email: "user3@com.au",
             password: "333",
             valid: "",
-            type: "normal"
+            type: "normal",
+            groups: ["group1,", "group2", "group3"]
         },
         {
             username: "user4",
@@ -47,7 +55,8 @@ module.exports = function(app, path){
             email: "user4@com.au",
             password: "444",
             valid: "",
-            type: "group assis"
+            type: "group",
+            groups: ["group1,", "group3"]
         }
     ];
 
@@ -72,6 +81,7 @@ module.exports = function(app, path){
         freshUser.age = req.body.age;
         freshUser.type = "normal";
         freshUser.valid = "";
+        freshUser.groups = [];
 
         users.forEach(user => {
             if(user.email == freshUser.email && user.username == freshUser.username){
@@ -86,7 +96,9 @@ module.exports = function(app, path){
             }
         });
 
-        users.push(freshUser);
+        if(freshUser.valid == ""){
+            users.push(freshUser);
+        }
         res.send(freshUser);
     });
 
@@ -100,7 +112,6 @@ module.exports = function(app, path){
         newGroup.group = req.body.group;
         newGroup.assis = req.body.selectedAssis;
         newGroup.members = req.body.members;
-        console.log(req.body.members);
 
         groups.forEach(group => {
             if(group.group == newGroup.group){
@@ -108,7 +119,7 @@ module.exports = function(app, path){
             }
         });
 
-        if ((valid = false)) {
+        if (!valid) {
             res.send(false);
         } else {
             groups.push(newGroup);
@@ -143,6 +154,19 @@ module.exports = function(app, path){
         });
         res.send(users);
     })
+
+    app.post("group/delete", function(req, res) {
+        if(!req.body) {
+            return res.sendStatus(400);
+        }
+
+        groups.forEach((group, index) => {
+            if(group.group == req.body.group){
+                groups.splice(index, 1);
+            }
+        });
+        res.send(groups);
+    });
     
     app.post('/api/auth', function(req, res) {
         if(!req.body){
@@ -160,6 +184,7 @@ module.exports = function(app, path){
                 consumer.age = user.age;
                 consumer.type = user.type
                 consumer.valid = true;
+                consumer.groups = user.groups;
             }
         });
         if (consumer.valid == true){

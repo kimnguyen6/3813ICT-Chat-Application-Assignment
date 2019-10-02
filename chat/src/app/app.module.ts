@@ -25,7 +25,7 @@ import { CreateGroupComponent } from './create-group/create-group.component';
     AppComponent,
     LoginComponent,
     ProfileComponent,
-    //ChannelsComponent,
+    ChannelsComponent,
     GroupsComponent,
     UsersComponent,
     RegisterComponent,

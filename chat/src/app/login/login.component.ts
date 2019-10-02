@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
 
   itemClicked() {
     this.datasharingservice.logIn(this.email, this.password).subscribe(data => {
+      console.log(data);
       var dataJson = JSON.stringify(data);
       console.log(dataJson);
 

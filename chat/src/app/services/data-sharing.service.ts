@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -41,7 +41,6 @@ export class DataSharingService {
     });
   }
   createGroup(group: any, members, selectedAssis: any) {
-    console.log(members);
     return this.http.post<any>(this.backend + "/group/create", {
       group: group,
       members: members,
