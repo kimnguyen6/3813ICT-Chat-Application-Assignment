@@ -12,14 +12,17 @@ export class CreateGroupComponent implements OnInit {
   group;
   members = [];
   users;
+  groupAdmin;
+
   selectedMember;
   selectedAssis;
 
-  constructor(private router: Router, private datasharingserve: DataSharingService) { }
+  constructor(private router: Router, private datasharingservice: DataSharingService) { }
 
   ngOnInit() {
     this.profile = JSON.parse(sessionStorage.getItem("user"));
 
+    this.groupAdmin = this.profile.username;
     if(this.profile.type == "normal"){
       alert("Only for Super & Group Admin");
       this.router.navigateByUrl("/account");
@@ -27,9 +30,16 @@ export class CreateGroupComponent implements OnInit {
       alert("Only for Super & Group Admin");
       this.router.navigateByUrl("/account");
     }
-    this.datasharingserve.getUsers().subscribe(data => {
+    this.datasharingservice.getUsers().subscribe(data => {
+      data.forEach((user, index) => {
+        if ((this.profile.type == "group" && user.username == this.profile.username) ||
+            (this.profile.type == "super" && user.username == this.profile.username)) 
+            {
+              data.splice(index, 1);
+            }
+      })
       this.users = data;
-    })
+    });
   }
   
   addMembers(){
@@ -54,12 +64,29 @@ export class CreateGroupComponent implements OnInit {
   }
 
   createGroups(){
-    this.datasharingserve.createGroup(this.group, this.members, this.selectedAssis).subscribe(data => {
-      if(!data) {
-        alert("Group name already exists, create another name");
-      } else {
-        this.router.navigateByUrl("/groups");
-      }
-    });
+    if(this.group == undefined || this.group == "") {
+      alert("Group name not allowed to be empty");
+    } else if (this.members.length == 0) {
+      alert("members not allowed to be empty");
+    } else if (this.selectedAssis === undefined || this.selectedAssis == "") {
+      alert("Group Assis not allowed to be empty");
+    } else {
+      this.members.push(this.selectedAssis);
+      this.members.push(this.groupAdmin);
+
+      this.datasharingservice.createGroup(
+        this.group,
+        this.members,
+        this.selectedAssis,
+        this.groupAdmin
+      )
+      .subscribe(data => {
+        if(!data) {
+          alert("Group name already exists");
+        } else {
+          this.router.navigateByUrl("/groups");
+        }
+      });
+    }
   }
 }

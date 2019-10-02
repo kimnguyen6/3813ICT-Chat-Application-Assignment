@@ -1,1 +1,42 @@
-<p>channels works!</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <style type="text.css">
+          .container {
+            width: 340px;
+            margin: 50px auto;
+          }
+          .container form {
+            margin-bottom: 15px;
+            background: #f7f7f7;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+          }
+          .container h1 {
+            text-align: center;
+          }
+      </style>
+  </head>
+  <div class="container">
+      <div class="notification">
+        <form>
+          <div class="field has-addons has-addons-centered">
+              <div class="control">
+                  <h1>Channels</h1>
+                  <a href ="groups/channels/createChannel">Create Channel</a>
+                  <div *ngFor="let userChannel of userChannels">
+                      <h1>
+                          {{ userChannel.channel }}
+                      </h1>
+                      <p *ngFor="let member of toArray(userChannel.members)">
+                          Channel Members: {{ member }}
+                      </p>
+                      <button type="button" (click)="viewChat()">Chat</button>
+                  </div>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
+</html>
+  

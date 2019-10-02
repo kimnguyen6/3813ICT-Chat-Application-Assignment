@@ -97,8 +97,7 @@ module.exports = function(app, path){
         freshUser.password = req.body.password;
         freshUser.birthday = req.body.birthday;
         freshUser.username = req.body.username;
-        freshUser.age = req.body.age;
-        freshUser.type = "normal";
+        freshUser.type = req.body.type;
         freshUser.valid = "";
         freshUser.groups = [];
 
@@ -134,7 +133,6 @@ module.exports = function(app, path){
             }
         });
         data = JSON.parse(data);
-        console.log(data);
 
         let valid = true;
 
@@ -145,6 +143,7 @@ module.exports = function(app, path){
         newGroup.group = req.body.group;
         newGroup.assis = req.body.selectedAssis;
         newGroup.members = req.body.members;
+        newGroup.groupAdmin = req.body.groupAdmin;
 
         req.body.members.forEach(group => {
             data.users.forEach(member => {
@@ -181,6 +180,7 @@ module.exports = function(app, path){
                 return data;
             }
         });
+
         data = JSON.parse(data);
 
         if(!req.body){
@@ -191,14 +191,13 @@ module.exports = function(app, path){
             group.members.forEach((member, index) => {
                 if (member == req.body.member){
                     group.members.splice(index, 1);
-                    res.send(data.groups);
-
-                    data = JSON.stringify(data);
-                    fs.writeFile("data.json", data, function (err, result){
-                        if (err) console.log("error", err);
-                    });
                 }
             });
+        });
+        res.send(data.groups);
+        data = JSON.stringify(data);
+        fs.writeFile("data.json", data, function(err, result) {
+            if (err) console.log("error", err);
         });
     });
 

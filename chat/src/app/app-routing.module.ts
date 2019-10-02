@@ -18,10 +18,10 @@ const routes: Routes = [
   {path: "users", component: UsersComponent},
   {path: "groups", component: GroupsComponent},
   {path: "groups/create", component: CreateGroupComponent},
-  {path: "channels/:group", component: ChannelsComponent},
-  //{path: "chat", component: ChatComponent},
+  {path: "groups/channels", component: ChannelsComponent},
+  {path: "groups/channels/chat", component: ChatComponent},
   //{path: "chat-room/:group/:channel", component: ChatRoomComponent},
-  //{path: "CreateChannel", component: CreateChannelComponent},
+  {path: "groups/channels/createChannel", component: CreateChannelComponent},
   {path: "register", component: RegisterComponent}
 ];
 

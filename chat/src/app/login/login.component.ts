@@ -20,11 +20,9 @@ export class LoginComponent implements OnInit {
 
   itemClicked() {
     this.datasharingservice.logIn(this.email, this.password).subscribe(data => {
-      console.log(data);
-      var dataJson = JSON.stringify(data);
-      console.log(dataJson);
-
       if (data.valid === true) {
+        var dataJson = JSON.stringify(data);
+        localStorage.setItem("user", dataJson);
         sessionStorage.setItem("user", dataJson);
         this.router.navigateByUrl("/profile");
       }

@@ -15,6 +15,7 @@ export class RegisterComponent implements OnInit {
   birthday: Date;
   age: number;
   super = false;
+  type = "";
   valid: boolean;
 
   profile;
@@ -34,27 +35,40 @@ export class RegisterComponent implements OnInit {
   }
 
   createUser(){
-    this.datasharingservice.register(
-        this.email,
-        this.password,
-        this.userName,
-        this.birthday,
-        this.age
-      )
-      
-      .subscribe(data => {
+    console.log(this.birthday, this.age);
+    if (this.email === undefined || this.email == ""){
+      alert("Email cannot be empty");
+      return;
+    } else if (this.userName === undefined || this.userName == ""){
+      alert("Username cannot be empty");
+      return;
+    } else if (this.password === undefined || this.password == ""){
+      alert("Password cannot be empty");
+      return;
+    } else if (this.type === undefined || this.type == ""){
+      alert("Type cannot be empty");
+      return;
+    } else if (this.birthday === undefined){
+      alert("Birthday cannot be empty");
+      return;
+    } else if (this.age === undefined) {
+      alert("Age cannot be empty");
+      return;
+    } else {
+      this.datasharingservice.register(this.email, this.password, this.userName, this.birthday, this.type).subscribe(data =>{
         var dataJSON = JSON.stringify(data);
 
-        if (data.valid === "emailFalse") {
-          alert("user email already exist, create new one");
-        } else if (data.valid === "usernameFalse") {
-          alert("user name already exist, create new one");
-        } else if (data.valid === "bothFalse") {
-          alert("Both user name and email already exist, create new one");
+        if (data.valid === "emailFalse"){
+          alert("Email already exists");
+        } else if (data.valid === "usernameFalse"){
+          alert("Username already exists");
+        } else if (data.valid === "bothFalse"){
+          alert("Both already exists");
         } else {
           var dataJSON = JSON.stringify(data);
           this.router.navigateByUrl("/users");
         }
       });
+    }
   }
 }
