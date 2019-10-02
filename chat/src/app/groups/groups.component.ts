@@ -17,17 +17,17 @@ export class GroupsComponent implements OnInit {
   constructor(private router: Router, private datashringservice: DataSharingService) { }
 
   ngOnInit() {
+    this.valid = false;
     if(typeof Storage !== "undefined"){
       this.data = JSON.parse(sessionStorage.getItem("user"));
       this.userGroups = this.data.groups;
-      
+
       if (this.data.type == "super" || this.data.type == "group"){
         this.valid = true;
       } else {
         this.valid = false;
       }
     }
-    this.valid = false;
 
     this.datashringservice.getGroups().subscribe(data =>{
       let groups = [];
