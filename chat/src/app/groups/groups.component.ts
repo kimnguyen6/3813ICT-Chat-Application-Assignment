@@ -14,12 +14,12 @@ export class GroupsComponent implements OnInit {
   valid;
   users;
   inviteMember;
-  constructor(private router: Router, private dataservice: DataSharingService) {}
+  constructor(private router: Router, private datasharingservice: DataSharingService) {}
 
   ngOnInit() {
-    this.dataservice.getGroups().subscribe(data => {
+    this.datasharingservice.getGroups().subscribe(data => {
       this.groups = data;
-      this.dataservice.getUsers().subscribe(data => {
+      this.datasharingservice.getUsers().subscribe(data => {
         this.users = data;
       });
       console.log(this.groups);
@@ -27,35 +27,43 @@ export class GroupsComponent implements OnInit {
     this.profile = JSON.parse(sessionStorage.getItem("user"));
   }
 
+  // delete group
   deleteGroup(group: string) {
-    this.dataservice.deleteGroup(group).subscribe(data => {
-      this.groups = data;
-    });
-  }
-  deleteMember(member: string, group: string) {
-    this.dataservice.deleteMember(member, group).subscribe(data => {
+    this.datasharingservice.deleteGroup(group).subscribe(data => {
       this.groups = data;
     });
   }
 
-  // change object(memebers) into array
-  // this function is used to do ngfor inside a ngfor
+  // Delete members
+  deleteMember(member: string, group: string) {
+    this.datasharingservice.deleteMember(member, group).subscribe(data => {
+      this.groups = data;
+    });
+  }
+
+  // change object into array
   toArray(members: object) {
     return Object.keys(members).map(key => members[key]);
   }
+
+  // views the channels, sends data to sessionstorage
   viewChannel(group) {
     sessionStorage.setItem("currentGroup", group);
     this.router.navigateByUrl("/groups/channels");
   }
+
+  // adds member to the group
   invite(group, inviteMember) {
-    console.log(inviteMember, group);
-    this.dataservice.groupInvite(inviteMember, group).subscribe(data => {
-      console.log(data);
-      if (!data) {
-        alert("user already exist");
-      } else {
-        this.groups = data;
-      }
-    });
+    if(inviteMember == undefined){
+      alert("Member needs to be selected");
+    } else {
+      this.datasharingservice.groupInvite(inviteMember, group).subscribe(data => {
+        if (!data) {
+          alert('User already exists');
+        } else {
+          this.groups = data;
+        }
+      });
+    }
   }
 }

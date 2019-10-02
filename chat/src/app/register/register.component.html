@@ -31,15 +31,15 @@
                   <input class="form-control" type="text" placeholder="Username" [(ngModel)]="userName" name="userName">
                 <br>
                   <label class="label is-large">Password: </label>
-                  <select name="type" [(ngModel)]="type">
-                    <option value="super">Super</option>
-                    <option value="group">Group</option>
-                    <option value="group assis">Group Assis</option>
-                    <option value="normal">Normal</option>
-                  </select>
+                  <input class="form-control" type="password" placeholder="Password" [(ngModel)]="password" name="password">
                 <br>
                   <label class="label is-large">Type: </label>
-                  <input class="form-control" type="password" placeholder="Password" [(ngModel)]="password" name="password">
+                  <select name="type" [(ngModel)]="type">
+                      <option value="super">Super</option>
+                      <option value="group">Group</option>
+                      <option value="group assis">Group Assis</option>
+                      <option value="normal">Normal</option>
+                  </select>
                 <br>
                   <label class="label is-large">Birthday: </label>
                   <input class="form-control" type="date" placeholder="xx/xx/xxxx" [(ngModel)]="birthday" name="birthday">

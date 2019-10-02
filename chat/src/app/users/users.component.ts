@@ -42,6 +42,7 @@ export class UsersComponent implements OnInit {
   }
   ngAfterViewInit(){}
 
+  // Deletes Users
   deleteUser(email:string){
     this.datasharingservice.deleteUser(email).subscribe(data => {
       this.users = data;

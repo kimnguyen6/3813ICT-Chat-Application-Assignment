@@ -15,6 +15,7 @@ export class AppComponent {
 
   ngOnInIt() {}
 
+  // Login Navigation
   loginLink() {
     if (
       JSON.parse(sessionStorage.getItem("user")) == undefined ||
@@ -23,6 +24,8 @@ export class AppComponent {
       this.router.navigateByUrl("/login");
     }
   }
+
+  //Register Navigation
   registerLink() {
     if (
       JSON.parse(sessionStorage.getItem("user")) !== undefined ||
@@ -31,6 +34,8 @@ export class AppComponent {
       this.router.navigateByUrl("/register");
     }
   }
+  
+  //Profile Navigation
   profileLink() {
     if (
       JSON.parse(sessionStorage.getItem("user")) != undefined ||
@@ -41,6 +46,7 @@ export class AppComponent {
       this.router.navigateByUrl("/login");
     }
   }
+  // Users Navigation
   usersLink() {
     if (
       JSON.parse(sessionStorage.getItem("user")) != undefined ||
@@ -51,7 +57,7 @@ export class AppComponent {
       this.router.navigateByUrl("/login");
     }
   }
-
+  // Groups Navigation
   groupsLink() {
     if (
       JSON.parse(sessionStorage.getItem("user")) != undefined ||
@@ -62,7 +68,7 @@ export class AppComponent {
       this.router.navigateByUrl("/login");
     }
   }
-
+  //Logs user out
   logOut() {
     if (typeof Storage !== "undefined") {
       localStorage.clear();

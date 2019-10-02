@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  // Login
   itemClicked() {
     this.datasharingservice.logIn(this.email, this.password).subscribe(data => {
       if (data.valid === true) {
@@ -25,6 +26,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("user", dataJson);
         sessionStorage.setItem("user", dataJson);
         this.router.navigateByUrl("/profile");
+      } else if (!data) {
+        alert("Incorrect Email or Password")
       }
     }),
       (error: HttpErrorResponse) => {

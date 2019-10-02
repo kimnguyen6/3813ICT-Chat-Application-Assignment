@@ -12,35 +12,46 @@ export class ChannelsComponent implements OnInit {
   constructor(private router: Router, private dataservice: DataSharingService) {}
 
   profile;
-  userChannels;
+  userChannels = [];
   selectUser;
   selectChannel;
+  users;
   groupName;
+
+  groupAssis;
+  valid;
 
   ngOnInit() {
     this.click.emit();
     let groupName = sessionStorage.getItem("currentGroup");
     this.profile = JSON.parse(sessionStorage.getItem("user"));
 
+    console.log(this.profile.type);
     this.groupName = groupName;
 
+    this.groupAssis = sessionStorage.getItem("assis");
+
     this.dataservice.getChannels(this.groupName).subscribe(data => {
+      this.users = data.members;
+
       this.userChannels = data.channels;
-      console.log(this.userChannels);
     });
   }
+  // Changes the object to an array
   toArray(members: object) {
     return Object.keys(members).map(key => members[key]);
   }
+
   viewChat() {
     this.router.navigateByUrl("groups/channels/chat");
   }
 
+  // Adds a member to a channel, after checking and receiving data
   addMember() {
     if (this.selectChannel == undefined) {
-      alert("Choose the channel");
+      alert("Choose a channel");
     } else if (this.selectUser == undefined) {
-      alert("choose the member");
+      alert("Choose a Member");
     } else {
       this.dataservice
         .channelInvite(this.groupName, this.selectChannel, this.selectUser)
@@ -53,12 +64,15 @@ export class ChannelsComponent implements OnInit {
         });
     }
   }
+
+  // Delete channel
   deleteChannel(channel) {
     this.dataservice.deleteChannel(this.groupName, channel).subscribe(data => {
       this.userChannels = data;
     });
   }
 
+  //Delete a member from the channel
   deleteChannelMember(member, channel) {
     this.dataservice
       .deleteChannelMember(this.groupName, channel, member)

@@ -34,8 +34,8 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  //Create new User
   createUser(){
-    console.log(this.birthday, this.age);
     if (this.email === undefined || this.email == ""){
       alert("Email cannot be empty");
       return;
@@ -50,9 +50,6 @@ export class RegisterComponent implements OnInit {
       return;
     } else if (this.birthday === undefined){
       alert("Birthday cannot be empty");
-      return;
-    } else if (this.age === undefined) {
-      alert("Age cannot be empty");
       return;
     } else {
       this.datasharingservice.register(this.email, this.password, this.userName, this.birthday, this.type).subscribe(data =>{

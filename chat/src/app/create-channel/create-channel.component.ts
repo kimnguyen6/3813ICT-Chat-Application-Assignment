@@ -18,13 +18,21 @@ export class CreateChannelComponent implements OnInit {
     this.group = sessionStorage.getItem("currentGroup");
   }
 
+  // Creates Channel
   createChannel(){
-    this.datasharingservice.createChannel(this.channelName, this.group).subscribe(data => {
-      if (!data) {
-        alert("Channel name already exists");
-      } else {
-        this.router.navigateByUrl("groups/channels");
-      }
-    });
+    console.log(this.channelName);
+    if (this.channelName == undefined) {
+      alert("Wrtie down the channel Name");
+    } else {
+      this.datasharingservice
+        .createChannel(this.channelName, this.group)
+        .subscribe(data => {
+          if (!data) {
+            alert("Channel names with same names cannot be created");
+          } else {
+            this.router.navigateByUrl("groups/channels");
+          }
+        });
+    }
   }
 }

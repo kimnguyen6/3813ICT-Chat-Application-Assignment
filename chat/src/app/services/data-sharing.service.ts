@@ -21,14 +21,17 @@ export class DataSharingService {
 
   constructor(private http: HttpClient) { }
 
+  //Sends Group name to channel component
   sendGroupName(group){
     this.$groupName.emit(group);
   }
 
+  // Gets the Group from the server
   getGroups() {
     return this.http.get<any>(this.backend + "/groups");
   }
 
+  // Authentication for logging in
   logIn(email: string, password: string) {
     return this.http.post<User>(this.backend + "/api/auth", {
       email: email,
@@ -36,15 +39,19 @@ export class DataSharingService {
     });
   }
 
+  // Gets the user
   getUsers() {
     return this.http.get<any>(this.backend + "/users");
   }
-  
+
+  // deletes the user
   deleteUser(email: string) {
     return this.http.post<any>(this.backend + "/api/delete", {
       email: email
     });
   }
+
+  // create groups
   createGroup(group: any, members, selectedAssis: any, groupAdmin: string) {
     return this.http.post<any>(this.backend + "/group/create", {
       group: group,
@@ -54,6 +61,7 @@ export class DataSharingService {
     });
   }
 
+  // invites other members to group
   groupInvite(member: string, group: string) {
     return this.http.post<any>(this.backend + "/groups/group/invite", {
       member: member,
@@ -61,12 +69,14 @@ export class DataSharingService {
     });
   }
 
+  // deletes group
   deleteGroup(group: string) {
     return this.http.post<any>(this.backend + "/group/delete", {
       group: group
     });
   }
 
+  //remove members from group
   deleteMember(member: string, group) {
     return this.http.post<any>(this.backend + "/group/deleteMember", {
       member: member,
@@ -74,13 +84,15 @@ export class DataSharingService {
     });
   }
 
+  // create channels within the group
   createChannel(channel: string, group: string) {
     return this.http.post<any>(this.backend + "/createChannel", {
       channel: channel,
       group: group
     });
   }
-  
+
+  // deletes channels in the group
   deleteChannel(group: string, channel: string) {
     return this.http.post<any>(this.backend + "/deleteChannel", {
       channel: channel,
@@ -88,6 +100,7 @@ export class DataSharingService {
     });
   }
 
+  // invites members into the channel
   channelInvite(groupName, channel, member) {
     return this.http.post<any>(this.backend + "/channel/invite", {
       group: groupName,
@@ -96,6 +109,7 @@ export class DataSharingService {
     });
   }
 
+  // creating a new user
   register(email: string, password: string, username: string, birthday: Date, type: string){
     return this.http.post<any>(this.backend + "/api/register", {
       email: email,
@@ -106,6 +120,7 @@ export class DataSharingService {
     });
   }
 
+  // remove a member from the channel
   deleteChannelMember(group: string, channel: string, member: string) {
     return this.http.post<any>(this.backend + "/channel/deleteMember", {
       group: group,
@@ -114,6 +129,7 @@ export class DataSharingService {
     });
   }
 
+  // gets channel
   getChannels(group: string) {
     return this.http.post<any>(this.backend + "/getChannels", {
       group: group

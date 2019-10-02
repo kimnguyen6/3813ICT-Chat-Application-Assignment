@@ -20,11 +20,12 @@
   <div class="container">
     <form>
         <h1>Channels</h1>
-        <a href="groups/channels/createChannel">Create Channel</a>
+        <a *ngIf="profile.type == 'super' || profile.type == 'group' || profile.username == groupAssis" href="groups/channels/createChannel">Create Channel</a>
         <div *ngFor="let userChannel of userChannels">
         <div *ngIf="userChannel.members.indexOf(profile.username) >= 0 ||
           profile.type == 'super' ||
-          profile.type == 'group'">
+          profile.type == 'group' ||
+          profile.username == groupAssis">
         </div>
         <h2>
             {{ userChannel.channel }}
@@ -32,23 +33,22 @@
         <div *ngFor="let member of toArray(userChannel.members)">
           <p>
             Channel Members: {{ member }}
-            <button type="submit" (click)="deleteChannelMember(member, userChannel.channel)">
+            <button *ngIf="profile.type == 'super' || profile.type == 'group' || profile.username == groupAssis" type="submit" (click)="deleteChannelMember(member, userChannel.channel)">
               Delete
             </button>
           </p>
         </div>
-        <button (click)="deleteChannel(userChannel.channel)">Delete Channel</button>
+        <button *ngIf="profile.type == 'super' || profile.type == 'group' || profile.username == groupAssis" (click)="deleteChannel(userChannel.channel)">Delete Channel</button>
         <button type="button" (click)="viewChat(member)">Chat</button>
-        <div *ngIf="valid">
+        <div *ngIf="profile.type == 'super' || profile.type == 'group' || profile.username == groupAssis">
+          {{ valid }}
           <select [(ngModel)]="selectChannel" name="selectChannel">
             <option *ngFor="let channel of userChannels" value="{{ channel.channel }}">
               {{ channel.channel }}
             </option>
           </select>
           <select [(ngModel)]="selectUser" name="selectUser">
-            <option *ngFor="let user of users" value="{{ user.username }}">
-              {{ user.username }}
-            </option>
+            <option *ngFor="let user of users" value="{{ user }}">{{ user }}</option>
             </select>
             <button (click)="addMember()">Invite</button>
         </div>

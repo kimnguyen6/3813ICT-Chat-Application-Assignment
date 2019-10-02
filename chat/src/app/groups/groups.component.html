@@ -32,7 +32,7 @@
                             </button>
                         </li>
                 </div>
-                <select name="inviteMember" [(ngModel)]="inviteMember">
+                <select *ngIf="profile.type == 'super' || profile.type == 'group'" name="inviteMember" [(ngModel)]="inviteMember">
                     <option *ngFor="let user of users" value="{{ user.username }}">
                         {{ user.username }}
                     </option>
@@ -44,7 +44,7 @@
                     <button type="button" (click)="viewChannel(group.group)">
                         View Channel
                     </button>
-                    <button *ngIf="profile.type == 'super' || profile.type == 'group'" type="submit" (click)="deleteGroup(group.group)">
+                    <button *ngIf="profile.type == 'super' || profile.type == 'group'" type="submit" (click)="deleteGroup(group.assis, group.group)">
                         Delete
                     </button>
                 </li>

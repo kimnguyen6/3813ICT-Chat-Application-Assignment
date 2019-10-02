@@ -1,6 +1,7 @@
 module.exports = function(app, path){
     var fs = require('fs');
 
+    // Gets Specific Group Information
     app.post("/getChannels", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if(err) {
@@ -23,6 +24,7 @@ module.exports = function(app, path){
         res.send(data.groups[groupIndex]);
     });
 
+    //Gets the Groups
     app.get("/groups", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
@@ -34,6 +36,7 @@ module.exports = function(app, path){
         res.send(data.groups);
     });
 
+    // Gets the Users
     app.get("/users", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
@@ -44,6 +47,7 @@ module.exports = function(app, path){
         res.send(data.users);
     });
     
+    // Creating New Users
     app.post("/api/register", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
@@ -88,6 +92,7 @@ module.exports = function(app, path){
         res.send(freshUser);
     });
 
+    // Creating a New Group
     app.post("/group/create", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if(err){
@@ -136,6 +141,7 @@ module.exports = function(app, path){
         }
     });
 
+    // Creating Channels in a Group
     app.post('/createChannel', (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function (err, data){
             if (err) {
@@ -180,6 +186,7 @@ module.exports = function(app, path){
         });
     });
 
+    // Delete Channel
     app.post("/deleteChannel", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
@@ -215,7 +222,8 @@ module.exports = function(app, path){
             if (err) console.log("error", err);
         });
     });
-    
+
+    // Delete members in the channel
     app.post('/channel/deleteMember', (req, res) =>{
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
@@ -260,6 +268,7 @@ module.exports = function(app, path){
           });
     });
 
+    // Add members to the channel
     app.post("/channel/invite", (req, res) => {
      let data = fs.readFileSync("data.json", "utf8", function(err, data) {
        if (err) {
@@ -336,43 +345,44 @@ module.exports = function(app, path){
      });
    });
 
-   app.post("/group/deleteMember", (req, res) => {
-    let data = fs.readFileSync("data.json", "utf8", function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        return data;
-      }
-    });
+  //  app.post("/group/deleteMember", (req, res) => {
+  //   let data = fs.readFileSync("data.json", "utf8", function(err, data) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       return data;
+  //     }
+  //   });
 
-    data = JSON.parse(data);
+  //   data = JSON.parse(data);
 
-    if (!req.body) {
-      return res.sendStatus(400);
-    }
-    console.log(req.body.group, req.body.member);
+  //   if (!req.body) {
+  //     return res.sendStatus(400);
+  //   }
+  //   console.log(req.body.group, req.body.member);
 
-    var group_index = data.groups
-      .map(group => {
-        return group.group;
-      })
-      .indexOf(req.body.group);
+  //   var group_index = data.groups
+  //     .map(group => {
+  //       return group.group;
+  //     })
+  //     .indexOf(req.body.group);
 
-    var member_index = data.groups[group_index].members.indexOf(
-      req.body.member
-    );
+  //   var member_index = data.groups[group_index].members.indexOf(
+  //     req.body.member
+  //   );
 
-    console.log(member_index);
+  //   console.log(member_index);
 
-    data.groups[group_index].members.splice(member_index, 1);
+  //   data.groups[group_index].members.splice(member_index, 1);
 
-    res.send(data.groups);
-     data = JSON.stringify(data);
-    fs.writeFile("data.json", data, function(err, result) {
-      if (err) console.log("error", err);
-    });
-  });
+  //   res.send(data.groups);
+  //    data = JSON.stringify(data);
+  //   fs.writeFile("data.json", data, function(err, result) {
+  //     if (err) console.log("error", err);
+  //   });
+  // });
 
+    // Deletes Users
     app.post('/api/delete', function(req, res) {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {
@@ -400,6 +410,7 @@ module.exports = function(app, path){
         });
     })
 
+    // Deletes Groups
     app.post("group/delete", function(req, res) {
         let data = fs.readFileSync("data.json", "utf8", function(err, data) {
             if (err) {
@@ -435,7 +446,8 @@ module.exports = function(app, path){
             }
         });
     });
-    
+
+    // Adds Group Members
     app.post("/groups/group/invite", (req, res) => {
      let data = fs.readFileSync("data.json", "utf8", function(err, data) {
        if (err) {
@@ -469,6 +481,7 @@ module.exports = function(app, path){
      });
    });
 
+   // Authentication
     app.post('/api/auth', function(req, res) {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
             if (err) {

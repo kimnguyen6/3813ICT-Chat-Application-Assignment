@@ -42,6 +42,7 @@ export class CreateGroupComponent implements OnInit {
     });
   }
   
+  // Add members to a group, when the user is creating a group
   addMembers(){
     let memberValid = true;
 
@@ -63,6 +64,7 @@ export class CreateGroupComponent implements OnInit {
     }
   }
 
+  // create new groups
   createGroups(){
     if(this.group == undefined || this.group == "") {
       alert("Group name not allowed to be empty");
