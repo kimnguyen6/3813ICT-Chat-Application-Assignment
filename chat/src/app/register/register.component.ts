@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
     console.log(fd)
     this.datasharingservice.imgUpload(fd).subscribe(res => {
       this.imagePath = res.data.filename;
-      console.log(res.data.filename + " " + res.data.size)
+      console.log(res.data.filename + " , " + res.data.size)
     })
   }
 

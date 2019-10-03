@@ -20,7 +20,7 @@ module.exports = function(db, app, path, ObjectID){
       if (count == 0) {
         userCollection.insertOne(users, (err, dbres) =>{
           if (err) throw err;
-          console.log(userCollection)
+          console.log(userCollection);
         });
       }
     });
@@ -73,13 +73,26 @@ module.exports = function(db, app, path, ObjectID){
 
     // Gets the Users
     app.get("/users", (req, res) => {
-        let data = fs.readFileSync("data.json", "utf8", function(err, data){
-            if (err) {
-                console.log(err);
-            }
-        });
-        data = JSON.parse(data);
-        res.send(data.users);
+      userCollection.find({}).toArray((err, data) => {
+        res.send(data);
+        console.log(data);
+      });
+      fs.readFile("data.json", "utf8", function(err, data) {
+        if (err) throw error;
+
+        console.log(req.body.email);
+
+        userCollection.find({ email: req.body.email, password: req.body.password }).count((err, count) =>{
+          if (count == 0){
+            console.log("email or password is invalid");
+            res.send(false);
+          } else {
+            userCollection.find({email: req.body.email, password: req.body.password }).limit(1).toArray((err, data) =>{
+              res.send(data);
+            });
+          }
+        })
+      })
     });
     
     // Creating New Users
