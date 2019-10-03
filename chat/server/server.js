@@ -9,12 +9,12 @@ const path = require('path');
 var bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
-//const formidable = require('formidable');
+const formidable = require('formidable');
 
 //const PORT = 3000;
 
 app.use(express.static(path.join(__dirname, '../dist/chat')));
-//app.use('/image', express.static(path.join(__dirname, './image.js')));
+app.use('/images', express.static(path.join(__dirname, './userImages')));
 app.use(bodyParser.json());
 
 app.use(cors());
@@ -26,5 +26,5 @@ MongoClient.connect(url, {poolSize:10, useNewUrlParser: true, useUnifiedTopology
     const db = client.db(dbName);
 
     require("./listen.js")(http);
-    require("./routes/api-login.js")(db, app, path, ObjectID);
+    require("./routes/api-login.js")(db, app, path, ObjectID, formidable);
 });

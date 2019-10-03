@@ -1,6 +1,41 @@
 module.exports = function(db, app, path, ObjectID){
     var fs = require('fs');
 
+    const userCollection = db.collection("users");
+    console.log(userCollection);
+    const groupsCollection = db.collection("groups");
+    console.log(groupsCollection);
+
+    var users = {
+      username: "user1",
+      birthday: "19/09/1993",
+      email: "user1@com.au",
+      password: "123",
+      valid: "",
+      type: "super",
+      groups:["group1,","group2","group3"]
+    };
+
+    userCollection.find({ email: "user1@com.au" }).count((err, count) => {
+      if (count == 0) {
+        userCollection.insertOne(users, (err, dbres) =>{
+          if (err) throw err;
+          console.log(userCollection)
+        });
+      }
+    });
+
+    //  image upload
+    app.post('/api/upload', (req, res) => {
+      var form = new formidable.IncomingForm({ uploadDir: './userImages' })
+      form.keepExtenstions = true;
+      
+      form.on('fileBegin', (name, file) => {
+        file.path = form.uploadDir + "/" + file.name;
+      })
+      form.parse(req);
+    })
+
     // Gets Specific Group Information
     app.post("/getChannels", (req, res) => {
         let data = fs.readFileSync("data.json", "utf8", function(err, data){
@@ -66,6 +101,7 @@ module.exports = function(db, app, path, ObjectID){
         freshUser.birthday = req.body.birthday;
         freshUser.username = req.body.username;
         freshUser.type = req.body.type;
+        freshUser.imageName = req.body.imageName;
         freshUser.valid = "";
         freshUser.groups = [];
 
@@ -253,48 +289,41 @@ module.exports = function(db, app, path, ObjectID){
   });
 
     // Delete members in the channel
-    app.post('/channel/deleteMember', (req, res) =>{
-        let data = fs.readFileSync("data.json", "utf8", function(err, data){
-            if (err) {
-                console.log(err);
-            } else {
-                return data;
-            }
-        });
-
-        data = JSON.parse(data);
-
-        if (!req.body) {
-            return res.sendStatus(400);
-          }
-          let groupIndex = data.groups
-            .map(group => {
-              return group.group;
-            })
-            .indexOf(req.body.group);
-     
-          let channelIndex = data.groups[groupIndex].channels
-            .map(channel => {
-              return channel.channel;
-            })
-            .indexOf(req.body.channel);
-     
-          let memberIndex = data.groups[groupIndex].channels[channelIndex].members
-            .map(member => {
-              return member;
-            })
-            .indexOf(req.body.member);
-     
-          data.groups[groupIndex].channels[channelIndex].members.splice(
-            memberIndex,
-            1
-          );
-          res.send(data.groups[groupIndex].channels);
-
-          data = JSON.stringify(data);
-          fs.writeFile("data.json", data, function(err, result){
-              if (err) console.log("error", err);
-          });
+    app.post("/group/deleteMember", (req, res) => {
+      let data = fs.readFileSync("data.json", "utf8", function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          return data;
+        }
+      });
+ 
+      data = JSON.parse(data);
+ 
+      if (!req.body) {
+        return res.sendStatus(400);
+      }
+      console.log(req.body.group, req.body.member);
+ 
+      var group_index = data.groups
+        .map(group => {
+          return group.group;
+        })
+        .indexOf(req.body.group);
+ 
+      var member_index = data.groups[group_index].members.indexOf(
+        req.body.member
+      );
+ 
+      console.log(member_index);
+ 
+      data.groups[group_index].members.splice(member_index, 1);
+ 
+      res.send(data.groups);
+       data = JSON.stringify(data);
+      fs.writeFile("data.json", data, function(err, result) {
+        if (err) console.log("error", err);
+      });
     });
 
     // Add members to the channel

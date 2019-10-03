@@ -43,9 +43,12 @@
                 <br>
                   <label class="label is-large">Birthday: </label>
                   <input class="form-control" type="date" placeholder="xx/xx/xxxx" [(ngModel)]="birthday" name="birthday">
+                <br>
+                <label class="label is-large">Upload Profile Image:</label>
+                <input type="file" (change)="onFileSelected($event)" name="uploadFile" />
               <div class="control">
               <br>
-                <button class="button is-primary" (click)="createUser()">Join</button>
+                <button class="button is-primary" (click)="createUser()" (click)="onUpload()">Join</button>
               </div>
           </div>
         </form>

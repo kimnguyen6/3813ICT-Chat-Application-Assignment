@@ -14,6 +14,7 @@
 <div class="container">
     <ul *ngFor="let user of users">
       <li>
+        <img src="http://localhost:3000/images/{{ user.imageName }}" width="100px" height="" alt="user"/>
         Email: {{ user.email }}<br />
         Username: {{ user.username }}<br />
         <button *ngIf="userType" type="submit" (click)="deleteUser(user.email)">

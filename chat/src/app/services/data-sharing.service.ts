@@ -21,6 +21,10 @@ export class DataSharingService {
 
   constructor(private http: HttpClient) { }
 
+  imgUpload(fd) {
+    return this.http.post<any>(this.backend + '/api/upload', fd)
+  }
+
   //Sends Group name to channel component
   sendGroupName(group){
     this.$groupName.emit(group);
@@ -110,13 +114,14 @@ export class DataSharingService {
   }
 
   // creating a new user
-  register(email: string, password: string, username: string, birthday: Date, type: string){
+  register(email: string, password: string, username: string, birthday: Date, type: string, imageName: string){
     return this.http.post<any>(this.backend + "/api/register", {
       email: email,
       password: password,
       username: username,
       birthday: birthday,
-      type: type
+      type: type,
+      imageName: imageName
     });
   }
 
